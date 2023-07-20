@@ -127,6 +127,7 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 				dep.setName(rs.getString("Name"));
 				list.add(dep);
 			}
+			return list;
 		}
 		catch (SQLException e) {
 			throw new DbException(e.getMessage());
@@ -134,7 +135,6 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 		finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
-		}		return null;
+		}
 	}
-
 }
