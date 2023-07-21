@@ -1,4 +1,4 @@
-/**package application;
+package application;
 
 import java.util.Date;
 import java.util.List;
@@ -54,4 +54,4 @@ public class Program {
 		sc.close();
 	}
 }
-**/
+

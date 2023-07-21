@@ -10,6 +10,7 @@ import java.util.List;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.dao.DepartmentDao;
 import model.entities.Department;
 
@@ -80,8 +81,20 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
 	@Override
 	public void deletById(Integer id) {
-		// TODO Auto-generated method stub
-		
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("DELETE FROM department WHERE Id = ?");
+			
+			st.setInt(1, id);
+			
+			st.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DbIntegrityException(e.getMessage());			
+		}
+		finally {
+			DB.closeStatement(st);
+		}		
 	}
 
 	@Override
@@ -94,10 +107,10 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 			st.setInt(1, id);
 			rs = st.executeQuery();
 			if (rs.next()) {
-				Department dep = new Department();
-				dep.setId(rs.getInt("Id"));
-				dep.setName(rs.getString("Name"));
-				return dep;
+				Department obj = new Department();
+				obj.setId(rs.getInt("Id"));
+				obj.setName(rs.getString("Name"));
+				return obj;
 			}
 			return null;
 		}
@@ -115,17 +128,17 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
-			st = conn.prepareStatement("SELECT * FROM department");
+			st = conn.prepareStatement("SELECT * FROM department ORDER BY Name");
 			
 			rs = st.executeQuery();
 			
 			List<Department> list = new ArrayList<>();
 			
 			while (rs.next()) {
-				Department dep = new Department();
-				dep.setId(rs.getInt("Id"));
-				dep.setName(rs.getString("Name"));
-				list.add(dep);
+				Department obj = new Department();
+				obj.setId(rs.getInt("Id"));
+				obj.setName(rs.getString("Name"));
+				list.add(obj);
 			}
 			return list;
 		}
